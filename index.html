@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bumble Clone Advanced</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#fff8e1; }
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      background:#ffcd00; padding:15px; font-weight:bold;
+    }
+    .logo { font-size:22px; }
+    .search input {
+      padding:6px; border-radius:5px; border:1px solid #ccc;
+    }
+    .card {
+      margin:20px auto; width:320px; height:450px;
+      background:white; border-radius:15px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.3);
+      overflow:hidden; text-align:center;
+    }
+    .card img { width:100%; height:70%; object-fit:cover; }
+    .info { padding:10px; }
+    .actions { display:flex; justify-content:space-around; margin:15px; }
+    .btn {
+      width:60px; height:60px; border-radius:50%; font-size:24px; border:none;
+      cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.3);
+    }
+    .like{ background:#ff4d6d; color:white; }
+    .dislike{ background:#ddd; }
+    .superlike{ background:#4dabf7; color:white; }
+    /* Chat Box */
+    #chatBox {
+      display:none; width:320px; margin:20px auto; background:white;
+      border-radius:10px; padding:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+    #messages { height:200px; overflow-y:auto; border:1px solid #ddd; padding:5px; margin-bottom:10px; }
+    #messages p { margin:5px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">Bumble</div>
+    <div class="search">
+      <input type="text" id="searchBox" placeholder="Search profiles...">
+    </div>
+    <div>⚙️</div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="card" id="profileCard">
+    <img id="profileImg">
+    <div class="info">
+      <h2 id="profileName"></h2>
+      <p id="profileBio"></p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="actions">
+    <button class="btn dislike" onclick="dislike()">❌</button>
+    <button class="btn like" onclick="like()">❤️</button>
+    <button class="btn superlike" onclick="superlike()">⭐</button>
+  </div>
+
+  <!-- Chat Box -->
+  <div id="chatBox">
+    <h3>Chat with <span id="chatWith"></span></h3>
+    <div id="messages"></div>
+    <input type="text" id="chatInput" placeholder="Type message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+<script>
+  // Profiles
+  const profiles = [
+    {name:"Emily, 24", bio:"Traveler 🌍 | Music 🎶 | Foodie 🍕", img:"https://randomuser.me/api/portraits/women/44.jpg"},
+    {name:"Daniel, 27", bio:"Fitness 💪 | Startups 🚀 | Coffee ☕", img:"https://randomuser.me/api/portraits/men/46.jpg"},
+    {name:"Sophia, 22", bio:"Photography 📸 | Books 📚 | Nature 🌿", img:"https://randomuser.me/api/portraits/women/50.jpg"}
+  ];
+
+  let index = 0;
+  let likedProfiles = [];
+
+  function showProfile(i) {
+    document.getElementById("profileImg").src = profiles[i].img;
+    document.getElementById("profileName").innerText = profiles[i].name;
+    document.getElementById("profileBio").innerText = profiles[i].bio;
+  }
+
+  function nextProfile() {
+    index = (index+1) % profiles.length;
+    showProfile(index);
+  }
+
+  function like() {
+    likedProfiles.push(profiles[index].name);
+    alert("❤️ You liked " + profiles[index].name);
+    document.getElementById("chatWith").innerText = profiles[index].name;
+    document.getElementById("chatBox").style.display = "block"; // open chat
+    nextProfile();
+  }
+
+  function dislike() {
+    alert("❌ You disliked " + profiles[index].name);
+    nextProfile();
+  }
+
+  function superlike() {
+    alert("⭐ Super Like for " + profiles[index].name);
+    nextProfile();
+  }
+
+  // Chat simulation
+  function sendMessage() {
+    let msg = document.getElementById("chatInput").value;
+    if(msg.trim() !== "") {
+      let p = document.createElement("p");
+      p.innerText = "You: " + msg;
+      document.getElementById("messages").appendChild(p);
+      document.getElementById("chatInput").value = "";
+    }
+  }
+
+  // Search profiles
+  document.getElementById("searchBox").addEventListener("input", function() {
+    let search = this.value.toLowerCase();
+    let found = profiles.find(p => p.name.toLowerCase().includes(search));
+    if(found) {
+      document.getElementById("profileImg").src = found.img;
+      document.getElementById("profileName").innerText = found.name;
+      document.getElementById("profileBio").innerText = found.bio;
+    }
+  });
+
+  // Show first profile
+  showProfile(index);
+</script>
+
+</body>
+</html>
